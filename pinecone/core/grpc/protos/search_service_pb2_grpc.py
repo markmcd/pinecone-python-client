@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import core.grpc.protos.search_service_pb2 as search__service__pb2
+import pinecone.core.grpc.protos.search_service_pb2 as search__service__pb2
 
 
 class SearchServiceStub(object):
