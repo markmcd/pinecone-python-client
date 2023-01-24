@@ -124,11 +124,3 @@ class SearchGrpcClient(GRPCIndexBase):
                    timeout: Optional[int] = None) -> FetchResponse:
         request = DeleteRequest(namespace=namespace, delete_all=True)
         self._wrap_grpc_call(self.stub.Delete, request, timeout=timeout)
-
-
-if __name__ == '__main__':
-    pinecone.init(api_key="API_KEY",
-                  project_name='load-test', environment='internal-alpha')
-    client = SearchGrpcClient(index_name="text-layer-test-index", embedding_model="text-embedding-ada-002")
-    res = client.upsert([TextVector(id='1', text='hello world', metadata=dict_to_proto_struct({'foo': 'bar'}))])
-    print(res.upserted_count)
