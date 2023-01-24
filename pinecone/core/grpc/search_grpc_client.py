@@ -1,16 +1,15 @@
 from dataclasses import dataclass
 
-from core.grpc.index_grpc import GRPCIndexBase
-from core.grpc.protos.search_service_pb2_grpc import SearchServiceStub
-from core.grpc.protos.search_service_pb2 import UpsertRequest, QueryRequest, UpsertResponse, QueryResponse, \
+from pinecone.core.grpc.index_grpc import GRPCIndexBase
+from pinecone.core.grpc.protos.search_service_pb2_grpc import SearchServiceStub
+from pinecone.core.grpc.protos.search_service_pb2 import UpsertRequest, QueryRequest, UpsertResponse, QueryResponse, \
     FetchRequest, FetchResponse, DeleteRequest
-from core.grpc.protos.search_service_pb2 import TextVector as ProtoTextVector
+from pinecone.core.grpc.protos.search_service_pb2 import TextVector as ProtoTextVector
 import logging
 from typing import Optional, List, Dict, Any
 
 from tqdm import tqdm
-import pinecone
-from core.utils import dict_to_proto_struct
+from pinecone.core.utils import dict_to_proto_struct
 
 _logger = logging.getLogger(__name__)
 
