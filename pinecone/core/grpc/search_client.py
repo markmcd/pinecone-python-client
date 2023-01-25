@@ -26,7 +26,7 @@ class Text:
         return ProtoTextVector(id=self.id, text=self.text, metadata=metadata)
 
 
-class SearchGrpcIndex(GRPCIndexBase):
+class SearchIndex(GRPCIndexBase):
 
     def __init__(self, index_name: str, embedding_model: str):
         super().__init__(index_name)

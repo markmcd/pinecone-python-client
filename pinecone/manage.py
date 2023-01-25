@@ -6,6 +6,7 @@ import time
 from typing import NamedTuple, Optional
 
 import pinecone
+from pinecone import SearchIndex
 from pinecone.config import Config
 from pinecone.core.client.api.index_operations_api import IndexOperationsApi
 from pinecone.core.client.api_client import ApiClient
@@ -63,6 +64,38 @@ def _get_status(name: str):
     api_instance = _get_api_instance()
     response = api_instance.describe_index(name)
     return response['status']
+
+
+def create_search_index(name: str,
+                        embedding_model_name: str,
+                        timeout: int = None,
+                        index_type: str = "approximated",
+                        metric: str = "cosine",
+                        replicas: int = 1,
+                        shards: int = 1,
+                        pods: int = 1,
+                        pod_type: str = 'p1',
+                        index_config: dict = None,
+                        metadata_config: dict = None,
+                        source_collection: str = '',
+                        ) -> SearchIndex:
+    embedding_model_name = embedding_model_name.lower()
+    model_to_dimension = {"openai/text-embedding-ada-002": 1536}
+    if embedding_model_name not in model_to_dimension:
+        raise ValueError(f"embedding_model_name {embedding_model_name} is not supported")
+    create_index(name,
+                 model_to_dimension[embedding_model_name],
+                 timeout,
+                 index_type,
+                 metric,
+                 replicas,
+                 shards,
+                 pods,
+                 pod_type,
+                 index_config,
+                 metadata_config,
+                 source_collection)
+    return SearchIndex(name, embedding_model_name)
 
 
 def create_index(
