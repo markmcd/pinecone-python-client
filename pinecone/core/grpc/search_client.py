@@ -16,7 +16,7 @@ _logger = logging.getLogger(__name__)
 
 
 @dataclass
-class Text:
+class Document:
     id: str
     text: str
     metadata: Optional[Dict[str, Any]] = None
@@ -37,22 +37,22 @@ class SearchIndex(GRPCIndexBase):
         return SearchServiceStub
 
     def upsert(self,
-               texts: Union[List[Text], List[str]],
+               documents: Union[List[Document], List[str]],
                namespace: Optional[str] = None,
                batch_size: Optional[int] = None,
                show_progress: bool = True,
                timeout: Optional[int] = None) -> UpsertResponse:
-        texts = [ProtoTextVector(id=str(uuid4()), text=v) if isinstance(v, str)
+        documents = [ProtoTextVector(id=str(uuid4()), text=v) if isinstance(v, str)
                  else v.to_proto()
-                 for v in texts]
+                     for v in documents]
         if batch_size is None:
-            request = UpsertRequest(vectors=texts, namespace=namespace, embedding_model=self.embedding_model)
+            request = UpsertRequest(vectors=documents, namespace=namespace, embedding_model=self.embedding_model)
             return self._wrap_grpc_call(self.stub.Upsert, request, timeout=timeout)
 
-        pbar = tqdm(total=len(texts), disable=not show_progress, desc='Upserted vectors')
+        pbar = tqdm(total=len(documents), disable=not show_progress, desc='Upserted vectors')
         total_upserted = 0
-        for i in range(0, len(texts), batch_size):
-            request = UpsertRequest(vectors=texts[i:i + batch_size], namespace=namespace)
+        for i in range(0, len(documents), batch_size):
+            request = UpsertRequest(vectors=documents[i:i + batch_size], namespace=namespace)
             response = self._wrap_grpc_call(self.stub.Upsert, request, timeout=timeout)
             total_upserted += response.upserted_count
             pbar.update(batch_size)
