@@ -7,7 +7,6 @@ from .exceptions import *
 from .info import *
 from .manage import *
 from .index import *
-from .core.grpc.search_client import *
 try:
     from .core.grpc.index_grpc import *
 except ImportError:

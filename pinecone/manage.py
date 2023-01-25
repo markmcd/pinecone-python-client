@@ -17,7 +17,7 @@ from pinecone.core.grpc.search_client import SearchIndex
 __all__ = [
     "create_index", "delete_index", "describe_index", "list_indexes", "scale_index", "IndexDescription",
     "create_collection", "describe_collection", "list_collections", "delete_collection", "configure_index",
-    "CollectionDescription", "create_search_index"
+    "CollectionDescription", "create_search_index", "SearchIndex"
 ]
 
 
