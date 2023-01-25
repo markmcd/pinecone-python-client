@@ -6,16 +6,17 @@ from pinecone.core.grpc.protos.search_service_pb2 import UpsertRequest, QueryReq
     FetchRequest, FetchResponse, DeleteRequest
 from pinecone.core.grpc.protos.search_service_pb2 import TextVector as ProtoTextVector
 import logging
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union
 
 from tqdm import tqdm
+from uuid import uuid4
 from pinecone.core.utils import dict_to_proto_struct
 
 _logger = logging.getLogger(__name__)
 
 
 @dataclass
-class TextVector:
+class Text:
     id: str
     text: str
     metadata: Optional[Dict[str, Any]] = None
@@ -25,7 +26,7 @@ class TextVector:
         return ProtoTextVector(id=self.id, text=self.text, metadata=metadata)
 
 
-class SearchGrpcClient(GRPCIndexBase):
+class SearchGrpcIndex(GRPCIndexBase):
 
     def __init__(self, index_name: str, embedding_model: str):
         super().__init__(index_name)
@@ -36,20 +37,22 @@ class SearchGrpcClient(GRPCIndexBase):
         return SearchServiceStub
 
     def upsert(self,
-               vectors: List[TextVector],
+               texts: Union[List[Text], List[str]],
                namespace: Optional[str] = None,
                batch_size: Optional[int] = None,
                show_progress: bool = True,
                timeout: Optional[int] = None) -> UpsertResponse:
-        vectors = [v.to_proto() for v in vectors]
+        texts = [ProtoTextVector(id=str(uuid4()), text=v) if isinstance(v, str)
+                 else v.to_proto()
+                 for v in texts]
         if batch_size is None:
-            request = UpsertRequest(vectors=vectors, namespace=namespace, embedding_model=self.embedding_model)
+            request = UpsertRequest(vectors=texts, namespace=namespace, embedding_model=self.embedding_model)
             return self._wrap_grpc_call(self.stub.Upsert, request, timeout=timeout)
 
-        pbar = tqdm(total=len(vectors), disable=not show_progress, desc='Upserted vectors')
+        pbar = tqdm(total=len(texts), disable=not show_progress, desc='Upserted vectors')
         total_upserted = 0
-        for i in range(0, len(vectors), batch_size):
-            request = UpsertRequest(vectors=vectors[i:i + batch_size], namespace=namespace)
+        for i in range(0, len(texts), batch_size):
+            request = UpsertRequest(vectors=texts[i:i + batch_size], namespace=namespace)
             response = self._wrap_grpc_call(self.stub.Upsert, request, timeout=timeout)
             total_upserted += response.upserted_count
             pbar.update(batch_size)
