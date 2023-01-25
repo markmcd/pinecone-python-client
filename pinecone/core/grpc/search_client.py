@@ -14,6 +14,8 @@ from pinecone.core.utils import dict_to_proto_struct
 
 _logger = logging.getLogger(__name__)
 
+__all__ = ['SearchIndex', 'Document']
+
 
 @dataclass
 class Document:

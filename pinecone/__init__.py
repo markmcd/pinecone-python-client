@@ -5,9 +5,9 @@ from pinecone.core.utils.constants import CLIENT_VERSION as __version__
 from .config import *
 from .exceptions import *
 from .info import *
-from .core.grpc.search_client import *
 from .manage import *
 from .index import *
+from .core.grpc.search_client import *
 try:
     from .core.grpc.index_grpc import *
 except ImportError:

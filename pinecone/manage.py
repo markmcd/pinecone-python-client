@@ -5,8 +5,6 @@
 import time
 from typing import NamedTuple, Optional
 
-import pinecone
-from pinecone import SearchIndex
 from pinecone.config import Config
 from pinecone.core.client.api.index_operations_api import IndexOperationsApi
 from pinecone.core.client.api_client import ApiClient
@@ -14,11 +12,12 @@ from pinecone.core.client.model.create_request import CreateRequest
 from pinecone.core.client.model.patch_request import PatchRequest
 from pinecone.core.client.model.create_collection_request import CreateCollectionRequest
 from pinecone.core.utils import get_user_agent
+from core.grpc.search_client import SearchIndex
 
 __all__ = [
     "create_index", "delete_index", "describe_index", "list_indexes", "scale_index", "IndexDescription",
     "create_collection", "describe_collection", "list_collections", "delete_collection", "configure_index",
-    "CollectionDescription"
+    "CollectionDescription", "create_search_index"
 ]
 
 
