@@ -12,7 +12,7 @@ from pinecone.core.client.model.create_request import CreateRequest
 from pinecone.core.client.model.patch_request import PatchRequest
 from pinecone.core.client.model.create_collection_request import CreateCollectionRequest
 from pinecone.core.utils import get_user_agent
-from pinecone.core.grpc.search_client import SearchIndex
+from pinecone.core.grpc.search_index import SearchIndex
 
 __all__ = [
     "create_index", "delete_index", "describe_index", "list_indexes", "scale_index", "IndexDescription",
