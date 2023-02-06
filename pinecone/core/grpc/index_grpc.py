@@ -501,7 +501,8 @@ class GRPCIndex(GRPCIndexBase):
         timeout = kwargs.pop('timeout', None)
         response = self._wrap_grpc_call(self.stub.Query, request, timeout=timeout)
         json_response = json_format.MessageToDict(response)
-        return parse_query_response(json_response, vector is not None or id, _check_type=False)
+        return json_response
+        # return parse_query_response(json_response, vector is not None or id, _check_type=False)
 
     def update(self,
                id: str,
