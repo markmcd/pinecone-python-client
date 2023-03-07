@@ -248,7 +248,7 @@ class PineconeGrpcFuture:
 
     def result(self, timeout=None):
         try:
-            self._delegate.result(timeout=timeout)
+            return self._delegate.result(timeout=timeout)
         except _MultiThreadedRendezvous as e:
             raise PineconeException(e._state.debug_error_string) from e
 
